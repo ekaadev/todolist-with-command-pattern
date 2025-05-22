@@ -34,8 +34,6 @@ func main() {
 
 loop:
 	for {
-		fmt.Printf("[DEBUG-UNDO]: %v\n", undo.Undo)
-		fmt.Printf("[DEBUG-REDO]: %v\n", redo.Redo)
 		fmt.Println("=========================================")
 		fmt.Printf("[HISTORY]: %v\n", history.History)
 		fmt.Println("Todolist")
@@ -68,9 +66,9 @@ loop:
 			}
 			add := src.NewCommandAddTaskImpl(&todo, strings.TrimSpace(input))
 			add.Execute()
-			history.Add("ADD")
 			undo.Undo = append(undo.Undo, add)
 			redo.Redo = nil
+			history.Add("ADD")
 		case "2":
 			fmt.Print("Choose one number of todo: ")
 			input, err = reader.ReadString('\n')
@@ -85,9 +83,9 @@ loop:
 			}
 			remove := src.NewCommandRemoveTaskImpl(&todo, indexOfTodo-1)
 			remove.Execute()
-			history.Add("REMOVE")
 			undo.Undo = append(undo.Undo, remove)
 			redo.Redo = nil
+			history.Add("REMOVE")
 		case "3":
 			fmt.Print("Choose one number of todo: ")
 			input, err = reader.ReadString('\n')
@@ -102,9 +100,9 @@ loop:
 			}
 			markAsDone := src.NewCommandMarkAsDoneTaskImpl(&todo, indexOfTodo-1)
 			markAsDone.Execute()
-			history.Add("MARK")
 			undo.Undo = append(undo.Undo, markAsDone)
 			redo.Redo = nil
+			history.Add("MARK")
 		case "u":
 			if len(undo.Undo) == 0 {
 				fmt.Println("Undo is empty")
@@ -117,6 +115,7 @@ loop:
 			// subtract stack
 			undo.Undo = undo.Undo[:len(undo.Undo)-1]
 			redo.Redo = append(redo.Redo, cmd)
+			history.Add("UNDO")
 		case "r":
 			if len(redo.Redo) == 0 {
 				fmt.Println("Redo is empty")
@@ -129,6 +128,7 @@ loop:
 			// subtract stack
 			redo.Redo = redo.Redo[:len(redo.Redo)-1]
 			undo.Undo = append(undo.Undo, cmd)
+			history.Add("REDO")
 		case "x":
 			break loop
 		default:

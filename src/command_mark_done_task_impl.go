@@ -29,7 +29,7 @@ func (c *CommandMarkAsDoneTaskImpl) Execute() {
 }
 
 func (c *CommandMarkAsDoneTaskImpl) Undo() {
-	if c.mark < 0 || c.mark >= len(c.todolist.Todo) {
+	if c.mark >= len(c.todolist.Todo) {
 		fmt.Println("invalid mark")
 		return
 	}
